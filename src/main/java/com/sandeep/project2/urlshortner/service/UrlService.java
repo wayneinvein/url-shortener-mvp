@@ -48,4 +48,11 @@ public class UrlService {
 
         return sb.reverse().toString();
     }
+
+    public String getOriginalUrl(String shortCode) {
+
+        Url url = urlRepository.findByShortCode(shortCode)
+                .orElseThrow(() -> new RuntimeException("Short URL not found"));
+        return url.getLongUrl();
+    }
 }
