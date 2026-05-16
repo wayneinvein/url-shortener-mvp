@@ -3,9 +3,14 @@ package com.sandeep.project2.urlshortner.service;
 import com.sandeep.project2.urlshortner.model.Url;
 import com.sandeep.project2.urlshortner.repository.UrlRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UrlService {
 
@@ -16,40 +21,51 @@ public class UrlService {
 
     public String createShortUrl(String originalUrl) {
 
+        log.info("request accepted for creating short url of this: {}", originalUrl);
+
         // 1. Save URL first to get ID
         Url url = new Url();
         url.setLongUrl(originalUrl);
-
         Url savedUrl = urlRepository.save(url);
-        System.out.println(savedUrl + ": saved url");
+
+        log.info("long url has been saved in DB");
 
         // 2. Convert ID → Base62
         String shortCode = encodeBase62(savedUrl.getId());
 
+        log.info("shortcode for long url has been created: {}", shortCode);
+
         // 3. Update entity with shortCode
         savedUrl.setShortCode(shortCode);
         urlRepository.save(savedUrl);
+
+        log.info("shortcode has been saved in DB");
 
         // 4. Return full short URL
         return BASE_URL + shortCode;
     }
 
     // Base62 Encoding Logic
-    private String encodeBase62(Long num) {
-        if (num == 0) return "0";
+    public String encodeBase62(long id) {
 
-        StringBuilder sb = new StringBuilder();
+        log.info("base62 encoding for id has started");
 
-        while (num > 0) {
-            int remainder = (int) (num % 62);
-            sb.append(BASE62.charAt(remainder));
-            num /= 62;
+        if (id == 0) return "0";
+
+        StringBuilder shortCode = new StringBuilder();
+
+        while (id > 0) {
+            int remainder = (int) (id % 62);
+            shortCode.append(BASE62.charAt(remainder));
+            id /= 62;
         }
 
-        return sb.reverse().toString();
+        return shortCode.reverse().toString();
     }
 
     public String getOriginalUrl(String shortCode) {
+
+        log.info("request received for getting original url corresponding to shortcode: {}", shortCode);
 
         Url url = urlRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new RuntimeException("Short URL not found"));
