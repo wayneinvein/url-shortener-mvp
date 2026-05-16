@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -22,6 +21,4 @@ public class Url {
     private String longUrl;
 
     private String shortCode;
-
-    private LocalDateTime createdAt;
 }

@@ -23,6 +23,12 @@ public class UrlService {
 
         log.info("request accepted for creating short url of this: {}", originalUrl);
 
+        originalUrl = originalUrl.trim();
+        if (originalUrl.startsWith("\"") && originalUrl.endsWith("\"")) {
+            originalUrl = originalUrl.substring(1, originalUrl.length() - 1);
+        }
+        log.info("cleaned original link before conversion");
+
         // 1. Save URL first to get ID
         Url url = new Url();
         url.setLongUrl(originalUrl);
