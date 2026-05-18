@@ -20,12 +20,6 @@ public class Url {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //it'll make sure the input is in correct form
-    @NotBlank
-    @Pattern(
-            regexp = "^(http://|https://).+",
-            message = "URL must start with http:// or https://"
-    )
     private String longUrl;
 
     private String shortCode;
