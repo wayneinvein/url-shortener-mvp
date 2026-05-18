@@ -1,6 +1,7 @@
 package com.sandeep.project2.urlshortner.controller;
 
 import com.sandeep.project2.urlshortner.service.UrlService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +18,7 @@ public class UrlController {
 
     // Create short URL
     @PostMapping("/shorten")
-    public ResponseEntity<String> createShortUrl(@RequestBody String originalUrl) {
+    public ResponseEntity<String> createShortUrl(@Valid @RequestBody String originalUrl) {
 
         log.info("conversion request received at controller for url: {}", originalUrl);
         String shortUrl = urlService.createShortUrl(originalUrl);
