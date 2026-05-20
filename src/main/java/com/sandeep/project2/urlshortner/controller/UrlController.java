@@ -1,5 +1,6 @@
 package com.sandeep.project2.urlshortner.controller;
 
+import com.sandeep.project2.urlshortner.dto.requestDto.UrlRequestDTO;
 import com.sandeep.project2.urlshortner.service.UrlService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class UrlController {
 
     // Create short URL
     @PostMapping("/shorten")
-    public ResponseEntity<String> createShortUrl(@Valid @RequestBody String originalUrl) {
+    public ResponseEntity<String> createShortUrl(@Valid @RequestBody UrlRequestDTO originalUrl) {
 
         log.info("conversion request received at controller for url: {}", originalUrl);
         String shortUrl = urlService.createShortUrl(originalUrl);

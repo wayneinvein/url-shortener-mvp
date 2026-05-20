@@ -1,5 +1,6 @@
 package com.sandeep.project2.urlshortner.service;
 
+import com.sandeep.project2.urlshortner.dto.requestDto.UrlRequestDTO;
 import com.sandeep.project2.urlshortner.model.Url;
 import com.sandeep.project2.urlshortner.repository.UrlRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,17 @@ public class UrlService {
     private static final String BASE_URL = "http://localhost:8080/"; // will change in prod
 
 
-    public String createShortUrl(String originalUrl) {
+    public String createShortUrl(UrlRequestDTO urlRequestDTO) {
 
-        log.info("request accepted for creating short url of this: {}", originalUrl);
+        log.info("request accepted for creating short url of this: {}", urlRequestDTO);
+
+        String originalUrl = urlRequestDTO.getLongUrl();
 
         originalUrl = originalUrl.trim();
         if (originalUrl.startsWith("\"") && originalUrl.endsWith("\"")) {
             originalUrl = originalUrl.substring(1, originalUrl.length() - 1);
         }
+
         log.info("cleaned original link before conversion");
 
         // 1. Save URL first to get ID
