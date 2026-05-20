@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -23,15 +24,23 @@ public class UrlService {
     public String createShortUrl(UrlRequestDTO urlRequestDTO) {
 
         log.info("request accepted for creating short url of this: {}", urlRequestDTO);
+        log.info("checking if it exist in DB or not");
 
+        //extract long url from the dto object
         String originalUrl = urlRequestDTO.getLongUrl();
 
+        //clean it
         originalUrl = originalUrl.trim();
-        if (originalUrl.startsWith("\"") && originalUrl.endsWith("\"")) {
-            originalUrl = originalUrl.substring(1, originalUrl.length() - 1);
+
+        //check if it is already present in DB
+        Optional<Url> existing = urlRepository.findByLongUrl(originalUrl);
+
+        //if yes, return base url + shortcode immediately else save it
+        if (existing.isPresent()) {
+            return BASE_URL + existing.get().getShortCode();
         }
 
-        log.info("cleaned original link before conversion");
+        log.info("not found in DB, so saving it");
 
         // 1. Save URL first to get ID
         Url url = new Url();
