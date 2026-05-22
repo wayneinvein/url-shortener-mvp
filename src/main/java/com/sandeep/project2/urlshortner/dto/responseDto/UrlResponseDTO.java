@@ -10,4 +10,5 @@ import lombok.RequiredArgsConstructor;
 public class UrlResponseDTO {
 
     private String shortUrl;
+    private String longUrl;
 }
