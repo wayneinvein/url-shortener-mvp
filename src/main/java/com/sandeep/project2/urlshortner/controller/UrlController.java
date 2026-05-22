@@ -20,13 +20,19 @@ public class UrlController {
 
     // Create short URL
     @PostMapping("/shorten")
-    public ResponseEntity<UrlResponseDTO> createShortUrl(@Valid @RequestBody UrlRequestDTO originalUrl) {
+    public ResponseEntity<UrlResponseDTO> createShortUrl(
+            @Valid @RequestBody UrlRequestDTO originalUrl) {
 
         log.info("conversion request received at controller for url: {}", originalUrl);
+
         String shortUrl = urlService.createShortUrl(originalUrl);
-        UrlResponseDTO urlResponseDto = new UrlResponseDTO(shortUrl);
+        String longUrl = originalUrl.getLongUrl();
+
+        UrlResponseDTO response = new UrlResponseDTO(shortUrl, longUrl);
+
         log.info("completed long url -> short url conversion now returning back to client");
-        return ResponseEntity.ok(urlResponseDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // Redirect API
