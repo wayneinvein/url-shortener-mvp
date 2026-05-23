@@ -5,6 +5,7 @@ import com.sandeep.project2.urlshortner.model.Url;
 import com.sandeep.project2.urlshortner.repository.UrlRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -82,12 +83,13 @@ public class UrlService {
         return shortCode.reverse().toString();
     }
 
+    @Cacheable(value = "urls", key = "#shortCode")
     public String getOriginalUrl(String shortCode) {
 
+        log.info("Cache Miss : fetching data from DB");
         log.info("request received for getting original url corresponding to shortcode: {}", shortCode);
 
-        Url url = urlRepository.findByShortCode(shortCode)
-                .orElseThrow(() -> new RuntimeException("Short URL not found"));
+        Url url = urlRepository.findByShortCode(shortCode).orElseThrow(() -> new RuntimeException("Short URL not found"));
         return url.getLongUrl();
     }
 }
