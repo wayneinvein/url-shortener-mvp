@@ -59,7 +59,7 @@ public class UrlService {
         savedUrl.setShortCode(shortCode);
         urlRepository.save(savedUrl);
 
-        log.info("shortcode has been saved in DB");
+        log.info("shortcode has been saved in DB, returning full short URL");
 
         // 4. Return full short URL
         return BASE_URL + shortCode;
